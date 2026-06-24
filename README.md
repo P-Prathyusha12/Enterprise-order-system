@@ -1,6 +1,6 @@
-# 🏢 Enterprise Order System (Monolith Edition)
+# 🏢 Enterprise Order System 
 
-A consolidated, production-ready **Monolithic** application built with **Spring Boot** and **MySQL**. It replicates the identical business rules, transaction validations, and compensating rollbacks of the microservices edition, but executes synchronously inside a single runtime on port `8080` without requiring Apache Kafka, ZooKeeper, or an API Gateway.
+A consolidated, production-ready  application built with **Spring Boot** and **MySQL**. It replicates the identical business rules, transaction validations, and compensating rollbacks of the microservices edition, but executes synchronously inside a single runtime on port `8080` without requiring Apache Kafka, ZooKeeper, or an API Gateway.
 
 ---
 
@@ -150,5 +150,5 @@ enterprise-order-system-monolith/
 ---
 
 ## 👩‍💻 Author
-**Prathyusha** — Enterprise Order System Monolith  
-Eclipse Workspace: `C:\Users\pprat\eclipse-workspace\enterprise-order-system-monolith`
+**Prathyusha** — Enterprise Order System  
+Eclipse Workspace: `C:\Users\pprat\eclipse-workspace\enterprise-order-system-
