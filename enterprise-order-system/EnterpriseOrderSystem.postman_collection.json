@@ -1,0 +1,247 @@
+{
+	"info": {
+		"_postman_id": "enterprise-order-system-collection",
+		"name": "Enterprise Order System Monolith",
+		"description": "Complete API collection for the monolithic Enterprise Order System application.\n\nAll endpoints are served from a single application on port 8080.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "👤 User Service",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["users"]
+						},
+						"description": "Returns all users from the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/1",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1"]
+						},
+						"description": "Returns a single user by their ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"arjun\",\n  \"email\": \"arjun@enterprise.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["users"]
+						},
+						"description": "Creates a new user."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📦 Inventory Service",
+			"item": [
+				{
+					"name": "Get Inventory By Product ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/inventory/101",
+							"host": ["{{base_url}}"],
+							"path": ["inventory", "101"]
+						},
+						"description": "Returns stock info for product ID 101 (Enterprise Laptop).\nSeed data:\n- 101: Enterprise Laptop (stock=10)\n- 102: Wireless Mouse (stock=50)\n- 103: Mechanical Keyboard (stock=5)"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Stock",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/inventory/add?productId=101&productName=Enterprise Laptop&quantity=10",
+							"host": ["{{base_url}}"],
+							"path": ["inventory", "add"],
+							"query": [
+								{
+									"key": "productId",
+									"value": "101"
+								},
+								{
+									"key": "productName",
+									"value": "Enterprise Laptop"
+								},
+								{
+									"key": "quantity",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Adds stock to an inventory item."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "💳 Payment Service",
+			"item": [
+				{
+					"name": "Get Payment By Order ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/payments/order/1",
+							"host": ["{{base_url}}"],
+							"path": ["payments", "order", "1"]
+						},
+						"description": "Returns the payment record for a specific order ID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🛒 Order Service",
+			"item": [
+				{
+					"name": "Get Order By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders/1",
+							"host": ["{{base_url}}"],
+							"path": ["orders", "1"]
+						},
+						"description": "Returns a single order by ID."
+					},
+					"response": []
+				},
+				{
+					"name": "✅ Scenario 1 - Happy Path (qty=2, total=500)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"productId\": 101,\n  \"quantity\": 2,\n  \"total\": 500.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": ["{{base_url}}"],
+							"path": ["orders"]
+						},
+						"description": "HAPPY PATH - Successful order.\n\nExpected Flow:\n- Validate User exists\n- Reserve stock (10 -> 8)\n- Process payment (total < 1000, so COMPLETED)\n- Order status becomes CONFIRMED"
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Scenario 2 - Out of Stock (qty=15)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"productId\": 101,\n  \"quantity\": 15,\n  \"total\": 3750.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": ["{{base_url}}"],
+							"path": ["orders"]
+						},
+						"description": "OUT OF STOCK - Ordering 15 units when stock is 8.\n\nExpected Flow:\n- Inventory reservation fails\n- Order status becomes FAILED with status reason detailing out-of-stock."
+					},
+					"response": []
+				},
+				{
+					"name": "❌ Scenario 3 - Payment Failed + Rollback (total=1500)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"productId\": 101,\n  \"quantity\": 3,\n  \"total\": 1500.00\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": ["{{base_url}}"],
+							"path": ["orders"]
+						},
+						"description": "PAYMENT FAILURE + ROLLBACK - Total > $1000 triggers simulated payment failure.\n\nExpected Flow:\n- Stock is reserved (8 -> 5)\n- Payment processing fails (> 1000 limit)\n- Rollback occurs: stock restored (5 -> 8)\n- Order status becomes FAILED with status reason detailing payment failure."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
