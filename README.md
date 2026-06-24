@@ -13,7 +13,7 @@ A consolidated, production-ready  application built with **Spring Boot** and **M
                                  │ HTTP Requests (Port 8080)
                                  ▼
                         ┌──────────────────┐
-                        │    Monolithic    │
+                        │    │
                         │ Spring Boot App  │
                         │  (Port 8080)     │
                         ├──────────────────┤
